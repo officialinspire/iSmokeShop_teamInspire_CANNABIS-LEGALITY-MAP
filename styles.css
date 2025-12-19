@@ -1,0 +1,480 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-green: #4CAF50;
+    --secondary-purple: #9C27B0;
+    --dark-bg: #1a1a2e;
+    --card-bg: #16213e;
+    --accent-cyan: #0ff;
+    --text-light: #e0e0e0;
+    --text-white: #ffffff;
+    --legal-green: #4CAF50;
+    --medical-blue: #2196F3;
+    --decrim-yellow: #FFC107;
+    --illegal-red: #f44336;
+    --hover-glow: rgba(76, 175, 80, 0.3);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #0f3460 100%);
+    color: var(--text-light);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+.header {
+    background: linear-gradient(135deg, var(--card-bg) 0%, #1e3a5f 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--primary-green);
+}
+
+.logo-section h1 {
+    font-size: 2.5em;
+    color: var(--primary-green);
+    text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--accent-cyan);
+    font-size: 1.1em;
+    margin-bottom: 25px;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95em;
+}
+
+.legend-color {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.legend-color.fully-legal {
+    background: var(--legal-green);
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+}
+
+.legend-color.medical-only {
+    background: var(--medical-blue);
+    box-shadow: 0 0 15px rgba(33, 150, 243, 0.6);
+}
+
+.legend-color.decriminalized {
+    background: var(--decrim-yellow);
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.6);
+}
+
+.legend-color.illegal {
+    background: var(--illegal-red);
+    box-shadow: 0 0 15px rgba(244, 67, 54, 0.6);
+}
+
+/* Main Content Layout */
+.main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Map Section */
+.map-section {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--secondary-purple);
+}
+
+.map-container {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+#usMap {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+}
+
+.state {
+    stroke: #333;
+    stroke-width: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.state:hover {
+    filter: brightness(1.3);
+    stroke: var(--accent-cyan);
+    stroke-width: 2;
+}
+
+.state.fully-legal {
+    fill: var(--legal-green);
+}
+
+.state.medical-only {
+    fill: var(--medical-blue);
+}
+
+.state.decriminalized {
+    fill: var(--decrim-yellow);
+}
+
+.state.illegal {
+    fill: var(--illegal-red);
+}
+
+.map-instruction {
+    text-align: center;
+    color: var(--accent-cyan);
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Federal Section */
+.federal-section {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--primary-green);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.federal-section h2 {
+    color: var(--primary-green);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8em;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+}
+
+.federal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.federal-item {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid var(--secondary-purple);
+    transition: transform 0.3s ease;
+}
+
+.federal-item:hover {
+    transform: translateX(5px);
+    border-left-color: var(--accent-cyan);
+}
+
+.federal-item h3 {
+    color: var(--accent-cyan);
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.federal-item p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    font-size: 0.95em;
+}
+
+.federal-item strong {
+    color: var(--primary-green);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--card-bg) 0%, #1e3a5f 100%);
+    margin: 5% auto;
+    padding: 40px;
+    border: 3px solid var(--primary-green);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 50px rgba(76, 175, 80, 0.4);
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: var(--text-light);
+    float: right;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--accent-cyan);
+}
+
+#stateName {
+    color: var(--primary-green);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+    text-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+}
+
+.state-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid var(--secondary-purple);
+}
+
+.info-section h3 {
+    color: var(--accent-cyan);
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.info-section h4 {
+    color: var(--primary-green);
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.info-section ul {
+    margin-left: 20px;
+    line-height: 1.8;
+}
+
+.info-section li {
+    margin-bottom: 8px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.status-legal {
+    background: var(--legal-green);
+    color: white;
+}
+
+.status-medical {
+    background: var(--medical-blue);
+    color: white;
+}
+
+.status-decrim {
+    background: var(--decrim-yellow);
+    color: #333;
+}
+
+.status-illegal {
+    background: var(--illegal-red);
+    color: white;
+}
+
+/* Footer */
+.footer {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--secondary-purple);
+}
+
+.footer p {
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.footer strong {
+    color: var(--primary-green);
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.disclaimer {
+    font-size: 0.85em;
+    color: var(--decrim-yellow);
+    font-style: italic;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-purple);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .federal-section {
+        max-height: none;
+    }
+
+    .legend {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 20px;
+    }
+
+    .logo-section h1 {
+        font-size: 1.8em;
+    }
+
+    .subtitle {
+        font-size: 1em;
+    }
+
+    .legend {
+        gap: 10px;
+    }
+
+    .legend-item {
+        font-size: 0.85em;
+    }
+
+    .legend-color {
+        width: 25px;
+        height: 25px;
+    }
+
+    .map-section, .federal-section {
+        padding: 20px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 25px;
+        margin: 10% auto;
+    }
+
+    #stateName {
+        font-size: 1.6em;
+    }
+
+    .info-section h3 {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-section h1 {
+        font-size: 1.5em;
+    }
+
+    .legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .federal-section h2 {
+        font-size: 1.4em;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+}

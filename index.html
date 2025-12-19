@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cannabis Legality Map | iSmokeShop</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <h1>🌿 Cannabis Legality Map</h1>
+                <p class="subtitle">Interactive Guide to State & Federal Laws</p>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-color fully-legal"></span>
+                    <span>Fully Legal</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color medical-only"></span>
+                    <span>Medical Only</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color decriminalized"></span>
+                    <span>Decriminalized</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color illegal"></span>
+                    <span>Illegal</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Map Section -->
+            <div class="map-section">
+                <div class="map-container" id="mapContainer">
+                    <svg id="usMap" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- US States will be rendered here by JavaScript -->
+                    </svg>
+                </div>
+                <p class="map-instruction">Click on any state to view detailed information</p>
+            </div>
+
+            <!-- Federal Laws Section -->
+            <div class="federal-section">
+                <h2>🏛️ Federal Laws & Regulations</h2>
+                <div class="federal-content">
+                    <div class="federal-item">
+                        <h3>Cannabis (Marijuana)</h3>
+                        <p><strong>Status:</strong> Schedule I Controlled Substance</p>
+                        <p>Federally illegal under the Controlled Substances Act. However, the 2018 Farm Bill legalized hemp (cannabis with less than 0.3% THC). Federal enforcement has generally deferred to state laws in states with legalization.</p>
+                    </div>
+                    <div class="federal-item">
+                        <h3>Psilocybin (Magic Mushrooms)</h3>
+                        <p><strong>Status:</strong> Schedule I Controlled Substance</p>
+                        <p>Federally illegal with no accepted medical use. Recent FDA breakthrough therapy designations for depression treatment have sparked renewed research interest.</p>
+                    </div>
+                    <div class="federal-item">
+                        <h3>DMT & Ayahuasca</h3>
+                        <p><strong>Status:</strong> Schedule I Controlled Substance</p>
+                        <p>Federally illegal. However, ayahuasca used in certain religious ceremonies by recognized churches may be exempt under the Religious Freedom Restoration Act.</p>
+                    </div>
+                    <div class="federal-item">
+                        <h3>Peyote (Mescaline)</h3>
+                        <p><strong>Status:</strong> Schedule I Controlled Substance</p>
+                        <p>Federally illegal, but the American Indian Religious Freedom Act allows use by Native American Church members for religious purposes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- State Info Modal -->
+        <div id="stateModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="stateName"></h2>
+                <div id="stateInfo" class="state-info-content"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made by <strong>#teamInspire</strong> in collaboration with <strong>iSmokeShop</strong></p>
+            <p class="disclaimer">⚠️ This information is for educational purposes only. Laws are subject to change. Always verify current local laws before use or possession.</p>
+        </footer>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
