@@ -886,10 +886,10 @@ const stateData = {
         status: "illegal",
         cannabis: {
             recreational: "Illegal",
-            medical: "Medical program approved but not operational",
+            medical: "Medical program approved but not yet operational",
             possession: "Criminal penalties apply",
             cultivation: "Illegal",
-            notes: "Medical program approved in 2021 but delayed implementation."
+            notes: "Medical program approved in 2021. Dispensary licenses awarded December 2025, with sales expected to begin Spring 2026."
         },
         psilocybin: {
             status: "Illegal",
@@ -905,13 +905,13 @@ const stateData = {
         }
     },
     "Kentucky": {
-        status: "illegal",
+        status: "medical-only",
         cannabis: {
             recreational: "Illegal",
-            medical: "Low-THC CBD only",
-            possession: "Criminal penalties (small amounts decriminalized in some cities)",
-            cultivation: "Illegal",
-            notes: "Medical program legislation passed in 2023, expected to launch 2025."
+            medical: "Legal with medical card",
+            possession: "Medical patients only",
+            cultivation: "Not permitted",
+            notes: "Medical program became operational December 2025. First dispensary opened in Beaver Dam on December 14, 2025."
         },
         psilocybin: {
             status: "Illegal",
@@ -1037,13 +1037,13 @@ const stateData = {
         }
     },
     "Nebraska": {
-        status: "illegal",
+        status: "medical-only",
         cannabis: {
             recreational: "Illegal",
-            medical: "No program",
-            possession: "Criminal penalties (first offense infraction)",
-            cultivation: "Illegal",
-            notes: "Medical marijuana on ballot multiple times. First offense treated as infraction."
+            medical: "Legal with medical card",
+            possession: "Up to 5 oz (medical only)",
+            cultivation: "Not permitted",
+            notes: "Voters approved medical marijuana initiatives in November 2024. Governor signed measures into law December 12, 2024. Program being implemented."
         },
         psilocybin: {
             status: "Illegal",
