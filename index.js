@@ -1217,17 +1217,49 @@ function initMap() {
                     return `state ${status}`;
                 })
                 .attr('data-state', d => stateIdToName[d.id])
+                .attr('tabindex', '0') // Make keyboard accessible
+                .attr('role', 'button')
+                .attr('aria-label', d => {
+                    const stateName = stateIdToName[d.id];
+                    return stateName ? `View ${stateName} information` : 'State';
+                })
                 .on('click', function(event, d) {
+                    event.preventDefault();
                     const stateName = stateIdToName[d.id];
                     if (stateName && stateData[stateName]) {
                         showStateInfo(stateName);
                     }
+                })
+                .on('touchstart', function(event, d) {
+                    // Prevent double-tap zoom on mobile
+                    event.preventDefault();
+                    d3.select(this).style('opacity', '1');
+                })
+                .on('touchend', function(event, d) {
+                    const stateName = stateIdToName[d.id];
+                    if (stateName && stateData[stateName]) {
+                        showStateInfo(stateName);
+                    }
+                    // Reset opacity after a delay
+                    setTimeout(() => {
+                        d3.select(this).style('opacity', '0.9');
+                    }, 300);
                 })
                 .on('mouseover', function() {
                     d3.select(this).style('opacity', '1');
                 })
                 .on('mouseout', function() {
                     d3.select(this).style('opacity', '0.9');
+                })
+                .on('keypress', function(event, d) {
+                    // Handle Enter and Space keys for accessibility
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        const stateName = stateIdToName[d.id];
+                        if (stateName && stateData[stateName]) {
+                            showStateInfo(stateName);
+                        }
+                    }
                 });
         })
         .catch(error => {
@@ -1241,9 +1273,12 @@ function showStateInfo(stateName) {
     const modal = document.getElementById('stateModal');
     const stateNameElement = document.getElementById('stateName');
     const stateInfoElement = document.getElementById('stateInfo');
-    
+
     const data = stateData[stateName];
-    
+
+    // Prevent background scrolling on mobile
+    document.body.style.overflow = 'hidden';
+
     stateNameElement.textContent = stateName;
     
     // Map status to CSS class names
@@ -1308,16 +1343,45 @@ function formatStatus(status) {
 function setupModal() {
     const modal = document.getElementById('stateModal');
     const closeBtn = document.querySelector('.close');
-    
+
+    // Close button click
     closeBtn.onclick = () => {
-        modal.style.display = 'none';
+        closeModal();
     };
-    
+
+    // Click outside modal to close
     window.onclick = (event) => {
         if (event.target === modal) {
-            modal.style.display = 'none';
+            closeModal();
         }
     };
+
+    // Escape key to close modal
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.style.display === 'block') {
+            closeModal();
+        }
+    });
+
+    // Touch outside modal to close (for mobile)
+    modal.addEventListener('touchstart', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+}
+
+// Helper function to close modal
+function closeModal() {
+    const modal = document.getElementById('stateModal');
+    modal.style.display = 'none';
+    // Re-enable background scrolling
+    document.body.style.overflow = 'auto';
+    // Reset scroll position
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.scrollTop = 0;
+    }
 }
 
 // Initialize everything when DOM is loaded
