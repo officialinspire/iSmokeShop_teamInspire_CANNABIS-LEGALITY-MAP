@@ -28,7 +28,7 @@ html {
 }
 
 body {
-    font-family: 'Georgia', 'Palatino', 'Times New Roman', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     background: url('cannabis-legality-map-background-banner.png') center center / cover no-repeat fixed;
     background-color: var(--warm-cream);
     color: var(--text-dark);
@@ -45,31 +45,31 @@ body {
 
 /* Header Styles */
 .header {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(61, 61, 61, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 50px 40px;
     margin-bottom: 50px;
-    box-shadow: 0 8px 32px rgba(107, 91, 77, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 3px solid var(--sage-green);
 }
 
 .logo-section h1 {
     font-size: 3em;
-    color: var(--forest-green);
-    text-shadow: 2px 2px 4px rgba(107, 91, 77, 0.1);
+    color: var(--sage-green);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     margin-bottom: 15px;
     text-align: center;
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: 1px;
 }
 
 .subtitle {
     text-align: center;
-    color: var(--earth-brown);
+    color: var(--soft-sand);
     font-size: 1.2em;
     margin-bottom: 35px;
-    font-style: italic;
+    font-style: normal;
     font-weight: 300;
 }
 
@@ -87,7 +87,7 @@ body {
     align-items: center;
     gap: 12px;
     font-size: 1em;
-    color: var(--text-dark);
+    color: var(--warm-cream);
     font-weight: 500;
 }
 
@@ -129,11 +129,11 @@ body {
 
 /* Map Section */
 .map-section {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(61, 61, 61, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 8px 32px rgba(107, 91, 77, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 3px solid var(--sage-green);
 }
 
@@ -204,31 +204,31 @@ body {
 
 .map-instruction {
     text-align: center;
-    color: var(--earth-brown);
-    font-style: italic;
+    color: var(--soft-sand);
+    font-style: normal;
     font-size: 1em;
     font-weight: 300;
 }
 
 /* Federal Section */
 .federal-section {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(61, 61, 61, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 8px 32px rgba(107, 91, 77, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 3px solid var(--terracotta);
     max-height: 700px;
     overflow-y: auto;
 }
 
 .federal-section h2 {
-    color: var(--forest-green);
+    color: var(--sage-green);
     margin-bottom: 30px;
     text-align: center;
     font-size: 2em;
-    text-shadow: 2px 2px 4px rgba(107, 91, 77, 0.1);
-    font-weight: 400;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
 }
 
 .federal-content {
@@ -426,29 +426,29 @@ body {
 
 /* Footer */
 .footer {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(61, 61, 61, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 35px;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(107, 91, 77, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 3px solid var(--sage-green);
 }
 
 .footer p {
     margin-bottom: 12px;
     font-size: 1em;
-    color: var(--text-dark);
+    color: var(--warm-cream);
 }
 
 .footer strong {
-    color: var(--forest-green);
-    text-shadow: 1px 1px 2px rgba(107, 91, 77, 0.1);
+    color: var(--sage-green);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     font-weight: 600;
 }
 
 .footer a {
-    color: var(--forest-green);
+    color: var(--sage-green);
     text-decoration: none;
     transition: all 0.3s ease;
     border-bottom: 2px solid transparent;
@@ -461,8 +461,8 @@ body {
 
 .disclaimer {
     font-size: 0.9em;
-    color: var(--terracotta);
-    font-style: italic;
+    color: var(--clay-orange);
+    font-style: normal;
     margin-top: 20px;
     padding-top: 20px;
     border-top: 2px solid var(--sage-green);
