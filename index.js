@@ -886,10 +886,10 @@ const stateData = {
         status: "illegal",
         cannabis: {
             recreational: "Illegal",
-            medical: "Medical program approved but not operational",
+            medical: "Medical program approved but not yet operational",
             possession: "Criminal penalties apply",
             cultivation: "Illegal",
-            notes: "Medical program approved in 2021 but delayed implementation."
+            notes: "Medical program approved in 2021. Licenses approved December 2024. Expected to launch spring 2026."
         },
         psilocybin: {
             status: "Illegal",
@@ -905,13 +905,13 @@ const stateData = {
         }
     },
     "Kentucky": {
-        status: "illegal",
+        status: "medical-only",
         cannabis: {
             recreational: "Illegal",
-            medical: "Low-THC CBD only",
-            possession: "Criminal penalties (small amounts decriminalized in some cities)",
-            cultivation: "Illegal",
-            notes: "Medical program legislation passed in 2023, expected to launch 2025."
+            medical: "Legal with medical card",
+            possession: "Medical patients only with registration card",
+            cultivation: "Licensed cultivators only",
+            notes: "Medical program officially launched January 1, 2025. Patient registration active, dispensaries opening in 2025."
         },
         psilocybin: {
             status: "Illegal",
@@ -1194,11 +1194,19 @@ function showStateInfo(stateName) {
     
     stateNameElement.textContent = stateName;
     
+    // Map status to CSS class names
+    const statusClassMap = {
+        'fully-legal': 'legal',
+        'medical-only': 'medical',
+        'decriminalized': 'decrim',
+        'illegal': 'illegal'
+    };
+
     // Build the info content
     let infoHTML = `
         <div class="info-section">
             <h3>🌿 Cannabis</h3>
-            <div class="status-badge status-${data.status.replace('-', '')}">${formatStatus(data.status)}</div>
+            <div class="status-badge status-${statusClassMap[data.status]}">${formatStatus(data.status)}</div>
             <h4>Recreational Use</h4>
             <p>${data.cannabis.recreational}</p>
             <h4>Medical Use</h4>
