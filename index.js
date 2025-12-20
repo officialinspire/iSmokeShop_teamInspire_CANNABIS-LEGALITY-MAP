@@ -1175,8 +1175,13 @@ function initMap() {
     const path = d3.geoPath().projection(projection);
 
     // Load US states + territories TopoJSON data (includes PR, Guam, etc.)
-    fetch('https://cdn.jsdelivr.net/npm/@d3ts/us-atlas@1/dist/states-10m.json')
-        .then(response => response.json())
+    fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(us => {
             // Convert TopoJSON to GeoJSON
             const states = topojson.feature(us, us.objects.states);
