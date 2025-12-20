@@ -1101,6 +1101,51 @@ const stateData = {
             status: "Illegal for general population",
             notes: "Religious exemptions apply."
         }
+    },
+    // US Territories
+    "Puerto Rico": {
+        status: "medical-only",
+        cannabis: {
+            recreational: "Illegal",
+            medical: "Legal with medical card",
+            possession: "Up to 1 oz (medical patients only)",
+            cultivation: "Not permitted",
+            notes: "Medical cannabis program established in 2015. Robust medical program with many dispensaries."
+        },
+        psilocybin: {
+            status: "Illegal",
+            notes: "No decriminalization measures."
+        },
+        dmt: {
+            status: "Illegal",
+            notes: "Schedule I substance under federal law."
+        },
+        peyote: {
+            status: "Illegal for general population",
+            notes: "Religious exemptions apply."
+        }
+    },
+    "Guam": {
+        status: "medical-only",
+        cannabis: {
+            recreational: "Illegal (decriminalized)",
+            medical: "Legal with medical card",
+            possession: "Small amounts decriminalized (up to 1 oz)",
+            cultivation: "Medical patients only",
+            notes: "Medical program established in 2014. Adult use decriminalized in 2019."
+        },
+        psilocybin: {
+            status: "Illegal",
+            notes: "No decriminalization measures."
+        },
+        dmt: {
+            status: "Illegal",
+            notes: "Schedule I substance under federal law."
+        },
+        peyote: {
+            status: "Illegal for general population",
+            notes: "Religious exemptions apply."
+        }
     }
 };
 
@@ -1150,7 +1195,9 @@ function initMap() {
                 41: 'Oregon', 42: 'Pennsylvania', 44: 'Rhode Island', 45: 'South Carolina',
                 46: 'South Dakota', 47: 'Tennessee', 48: 'Texas', 49: 'Utah',
                 50: 'Vermont', 51: 'Virginia', 53: 'Washington', 54: 'West Virginia',
-                55: 'Wisconsin', 56: 'Wyoming'
+                55: 'Wisconsin', 56: 'Wyoming',
+                // US Territories
+                66: 'Guam', 72: 'Puerto Rico'
             };
 
             // Draw states
