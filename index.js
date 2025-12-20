@@ -1174,7 +1174,8 @@ function initMap() {
     // Create path generator
     const path = d3.geoPath().projection(projection);
 
-    // Load US states + territories TopoJSON data (includes PR, Guam, etc.)
+    // Load US states + territories TopoJSON data
+    // Note: includes Puerto Rico (72) and Guam (66)
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
         .then(response => {
             if (!response.ok) {
@@ -1185,6 +1186,8 @@ function initMap() {
         .then(us => {
             // Convert TopoJSON to GeoJSON
             const states = topojson.feature(us, us.objects.states);
+
+            console.log('Map loaded - Total features:', states.features.length);
 
             // Map state IDs to names (using numeric IDs)
             const stateIdToName = {
@@ -1206,6 +1209,7 @@ function initMap() {
             };
 
             // Draw states
+            const renderedStates = [];
             g.selectAll('path')
                 .data(states.features)
                 .enter()
@@ -1214,6 +1218,9 @@ function initMap() {
                 .attr('class', d => {
                     const stateName = stateIdToName[d.id];
                     const status = stateData[stateName] ? stateData[stateName].status : 'illegal';
+                    if (stateName) {
+                        renderedStates.push({ name: stateName, status: status, id: d.id });
+                    }
                     return `state ${status}`;
                 })
                 .attr('data-state', d => stateIdToName[d.id])
@@ -1261,6 +1268,20 @@ function initMap() {
                         }
                     }
                 });
+
+            // Log rendered states for debugging
+            console.log('Rendered states:', renderedStates.length);
+            console.log('Puerto Rico rendered:', renderedStates.find(s => s.name === 'Puerto Rico') ? 'Yes' : 'No');
+            console.log('Guam rendered:', renderedStates.find(s => s.name === 'Guam') ? 'Yes' : 'No');
+
+            // Check if all states in stateData were rendered
+            const stateDataKeys = Object.keys(stateData);
+            const notRendered = stateDataKeys.filter(name =>
+                !renderedStates.find(s => s.name === name)
+            );
+            if (notRendered.length > 0) {
+                console.warn('States in data but not rendered:', notRendered);
+            }
         })
         .catch(error => {
             console.error('Error loading map data:', error);
