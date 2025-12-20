@@ -1174,8 +1174,8 @@ function initMap() {
     // Create path generator
     const path = d3.geoPath().projection(projection);
 
-    // Load US states TopoJSON data
-    fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
+    // Load US states + territories TopoJSON data (includes PR, Guam, etc.)
+    fetch('https://cdn.jsdelivr.net/npm/@d3ts/us-atlas@1/dist/states-10m.json')
         .then(response => response.json())
         .then(us => {
             // Convert TopoJSON to GeoJSON

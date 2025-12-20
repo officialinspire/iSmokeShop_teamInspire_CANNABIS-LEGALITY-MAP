@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Color Code Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .color-box {
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+            border: 2px solid #333;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .fully-legal { background: #6B8E6B; }
+        .medical-only { background: #7FA7C4; }
+        .decriminalized { background: #D4A574; }
+        .illegal { background: #B85C52; }
+    </style>
+</head>
+<body>
+    <h1>State Color Code Checker</h1>
+    <p>This page shows the expected color for each state based on the stateData configuration.</p>
+
+    <h2>Color Legend</h2>
+    <div>
+        <span class="color-box fully-legal"></span> Fully Legal (#6B8E6B)<br>
+        <span class="color-box medical-only"></span> Medical Only (#7FA7C4)<br>
+        <span class="color-box decriminalized"></span> Decriminalized (#D4A574)<br>
+        <span class="color-box illegal"></span> Illegal (#B85C52)
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        fetch('index.js')
+            .then(response => response.text())
+            .then(jsContent => {
+                // Extract stateData
+                const stateDataMatch = jsContent.match(/const stateData = ({[\s\S]*?^};)/m);
+                if (!stateDataMatch) {
+                    document.getElementById('results').innerHTML = '<p style="color: red;">Failed to load state data</p>';
+                    return;
+                }
+
+                const stateDataStr = stateDataMatch[1];
+                const stateData = eval('(' + stateDataStr + ')');
+
+                // Group states by status
+                const byStatus = {
+                    'fully-legal': [],
+                    'medical-only': [],
+                    'decriminalized': [],
+                    'illegal': []
+                };
+
+                Object.entries(stateData).forEach(([name, data]) => {
+                    byStatus[data.status].push(name);
+                });
+
+                // Create table for each category
+                let html = '';
+
+                Object.entries(byStatus).forEach(([status, states]) => {
+                    states.sort();
+                    html += `<h2>${status.toUpperCase()} (${states.length})</h2>`;
+                    html += '<table>';
+                    html += '<tr><th>State/Territory</th><th>Status</th><th>Color Code</th><th>Preview</th></tr>';
+
+                    states.forEach(state => {
+                        const colorCodes = {
+                            'fully-legal': '#6B8E6B',
+                            'medical-only': '#7FA7C4',
+                            'decriminalized': '#D4A574',
+                            'illegal': '#B85C52'
+                        };
+
+                        const colorCode = colorCodes[status];
+                        html += `<tr>`;
+                        html += `<td><strong>${state}</strong></td>`;
+                        html += `<td>${status}</td>`;
+                        html += `<td>${colorCode}</td>`;
+                        html += `<td><span class="color-box ${status}"></span></td>`;
+                        html += `</tr>`;
+                    });
+
+                    html += '</table>';
+                });
+
+                // Highlight the states user mentioned
+                html += '<h2>User-Mentioned States Verification</h2>';
+                html += '<table>';
+                html += '<tr><th>State/Territory</th><th>Current Status</th><th>Expected Status</th><th>Match</th></tr>';
+
+                const checkStates = [
+                    { name: 'Colorado', expected: 'fully-legal' },
+                    { name: 'California', expected: 'fully-legal' },
+                    { name: 'Nevada', expected: 'fully-legal' },
+                    { name: 'Alaska', expected: 'fully-legal' },
+                    { name: 'Connecticut', expected: 'fully-legal' },
+                    { name: 'Alabama', expected: 'illegal' },
+                    { name: 'Puerto Rico', expected: 'medical-only' },
+                    { name: 'Guam', expected: 'medical-only' }
+                ];
+
+                checkStates.forEach(check => {
+                    const actual = stateData[check.name] ? stateData[check.name].status : 'NOT FOUND';
+                    const match = actual === check.expected;
+                    const rowStyle = match ? 'background-color: #d4edda;' : 'background-color: #f8d7da;';
+
+                    html += `<tr style="${rowStyle}">`;
+                    html += `<td><strong>${check.name}</strong></td>`;
+                    html += `<td>${actual}</td>`;
+                    html += `<td>${check.expected}</td>`;
+                    html += `<td>${match ? '✅' : '❌'}</td>`;
+                    html += `</tr>`;
+                });
+
+                html += '</table>';
+
+                document.getElementById('results').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('results').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            });
+    </script>
+</body>
+</html>

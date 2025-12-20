@@ -63,10 +63,10 @@ if (codeStateIdMatch) {
     // Count entries
     const idMatches = codeStateIdMatch[0].match(/\d+:/g);
     console.log(`   Found ${idMatches.length} state ID mappings`);
-    if (idMatches.length === 50) {
-        console.log('✅ All 50 states have ID mappings');
+    if (idMatches.length === 52) {
+        console.log('✅ All 50 states + 2 territories have ID mappings');
     } else {
-        console.log(`❌ Expected 50 state IDs, found ${idMatches.length}`);
+        console.log(`⚠️  Expected 52 entries (50 states + 2 territories), found ${idMatches.length}`);
     }
 } else {
     console.log('❌ stateIdToName mapping not found in code');
@@ -116,9 +116,9 @@ Object.keys(statusCounts).forEach(status => {
 
 const expectedCounts = {
     'fully-legal': 24,
-    'medical-only': 12,  // Updated after Kentucky change
+    'medical-only': 14,  // Includes Kentucky + Puerto Rico + Guam
     'decriminalized': 2,
-    'illegal': 12  // Updated after Kentucky change
+    'illegal': 12
 };
 
 let totalStates = 0;
@@ -129,8 +129,8 @@ Object.entries(statusCounts).forEach(([status, count]) => {
     console.log(`${match} ${status.padEnd(20)} Count: ${count.toString().padStart(2)} (Expected: ${expected})`);
 });
 
-console.log(`\nTotal states: ${totalStates} (Expected: 50)`);
-if (totalStates === 50) {
+console.log(`\nTotal states + territories: ${totalStates} (Expected: 52)`);
+if (totalStates === 52) {
     console.log('✅ Total matches expected');
 } else {
     console.log('❌ Total does not match expected');
@@ -227,8 +227,8 @@ if (indexHtml.includes('d3js.org/topojson.v3.min.js')) {
     console.log('❌ TopoJSON not loaded or wrong version');
 }
 
-if (indexJs.includes('us-atlas@3/states-10m.json')) {
-    console.log('✅ US Atlas TopoJSON data source configured');
+if (indexJs.includes('@d3ts/us-atlas') || indexJs.includes('us-atlas@3/states-10m.json')) {
+    console.log('✅ US Atlas TopoJSON data source configured (includes territories)');
 } else {
     console.log('❌ US Atlas data source not found');
 }
@@ -241,8 +241,9 @@ console.log('='.repeat(80));
 console.log('');
 console.log('State Data:');
 console.log(`  • Total states mapped: ${foundStates.length}/50`);
+console.log(`  • Total territories: 2 (Puerto Rico, Guam)`);
 console.log(`  • Fully Legal: ${statusCounts['fully-legal']}`);
-console.log(`  • Medical Only: ${statusCounts['medical-only']}`);
+console.log(`  • Medical Only: ${statusCounts['medical-only']} (includes 2 territories)`);
 console.log(`  • Decriminalized: ${statusCounts['decriminalized']}`);
 console.log(`  • Illegal: ${statusCounts['illegal']}`);
 console.log('');
