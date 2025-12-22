@@ -1,0 +1,725 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+    --sage-green: #8B9D83;
+    --forest-green: #5F7161;
+    --terracotta: #C77D58;
+    --warm-cream: #F4EFE3;
+    --earth-brown: #6B5B4D;
+    --soft-sand: #E8DCC4;
+    --moss-green: #7A9B76;
+    --clay-orange: #D4A574;
+    --text-dark: #3D3D3D;
+    --text-light: #F4EFE3;
+    --legal-green: #6B8E6B;
+    --medical-blue: #7FA7C4;
+    --decrim-yellow: #D4A574;
+    --illegal-red: #B85C52;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background: url('cannabis-legality-map-background-banner.png') center center / cover no-repeat fixed;
+    background-color: var(--warm-cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.7;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Header Styles */
+.header {
+    background: rgba(61, 61, 61, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 50px 40px;
+    margin-bottom: 50px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--sage-green);
+}
+
+.logo-section h1 {
+    font-size: 3em;
+    color: var(--sage-green);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--soft-sand);
+    font-size: 1.2em;
+    margin-bottom: 35px;
+    font-style: normal;
+    font-weight: 300;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-top: 30px;
+    border-top: 2px solid var(--sage-green);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1em;
+    color: var(--warm-cream);
+    font-weight: 500;
+}
+
+.legend-color {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    border: 3px solid var(--earth-brown);
+    box-shadow: 0 4px 12px rgba(107, 91, 77, 0.2);
+}
+
+.legend-color.fully-legal {
+    background: var(--legal-green);
+    box-shadow: 0 4px 12px rgba(107, 142, 107, 0.4);
+}
+
+.legend-color.medical-only {
+    background: var(--medical-blue);
+    box-shadow: 0 4px 12px rgba(127, 167, 196, 0.4);
+}
+
+.legend-color.decriminalized {
+    background: var(--decrim-yellow);
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4);
+}
+
+.legend-color.illegal {
+    background: var(--illegal-red);
+    box-shadow: 0 4px 12px rgba(184, 92, 82, 0.4);
+}
+
+/* Main Content Layout */
+.main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+/* Map Section */
+.map-section {
+    background: rgba(61, 61, 61, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--sage-green);
+}
+
+.map-container {
+    background: var(--warm-cream);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: inset 0 2px 8px rgba(107, 91, 77, 0.1);
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.map-container svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(107, 91, 77, 0.15));
+}
+
+.state {
+    stroke: var(--earth-brown);
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    opacity: 0.9;
+    touch-action: manipulation; /* Prevents double-tap zoom */
+    -webkit-tap-highlight-color: transparent; /* Removes tap highlight on iOS */
+}
+
+.state:hover,
+.state:active,
+.state:focus {
+    opacity: 1;
+    filter: brightness(1.1);
+    stroke: var(--forest-green);
+    stroke-width: 2.5;
+    transform: translateY(-2px);
+}
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+    .state:active {
+        opacity: 1;
+        filter: brightness(1.15);
+        stroke: var(--forest-green);
+        stroke-width: 3;
+    }
+}
+
+.state.fully-legal {
+    fill: var(--legal-green);
+}
+
+.state.medical-only {
+    fill: var(--medical-blue);
+}
+
+.state.decriminalized {
+    fill: var(--decrim-yellow);
+}
+
+.state.illegal {
+    fill: var(--illegal-red);
+}
+
+.map-instruction {
+    text-align: center;
+    color: var(--soft-sand);
+    font-style: normal;
+    font-size: 1em;
+    font-weight: 300;
+}
+
+/* Federal Section */
+.federal-section {
+    background: rgba(61, 61, 61, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--terracotta);
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.federal-section h2 {
+    color: var(--sage-green);
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+.federal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.federal-item {
+    background: var(--warm-cream);
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 5px solid var(--terracotta);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(107, 91, 77, 0.1);
+}
+
+.federal-item:hover {
+    transform: translateX(5px);
+    border-left-color: var(--forest-green);
+    box-shadow: 0 4px 16px rgba(107, 91, 77, 0.2);
+}
+
+.federal-item-image {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 8px rgba(107, 91, 77, 0.15);
+}
+
+.federal-item h3 {
+    color: var(--forest-green);
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+.federal-item p {
+    margin-bottom: 10px;
+    line-height: 1.7;
+    font-size: 0.95em;
+    color: var(--text-dark);
+}
+
+.federal-item strong {
+    color: var(--terracotta);
+    font-weight: 600;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(107, 91, 77, 0.85);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--warm-cream) 0%, var(--soft-sand) 100%);
+    margin: 5% auto;
+    padding: 50px;
+    border: 4px solid var(--sage-green);
+    border-radius: 25px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 48px rgba(107, 91, 77, 0.3);
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: var(--earth-brown);
+    float: right;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.close:hover {
+    color: var(--terracotta);
+    transform: rotate(90deg);
+}
+
+#stateName {
+    color: var(--forest-green);
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(107, 91, 77, 0.1);
+    font-weight: 400;
+}
+
+.state-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.info-section {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid var(--terracotta);
+    box-shadow: 0 2px 8px rgba(107, 91, 77, 0.1);
+}
+
+.info-section h3 {
+    color: var(--forest-green);
+    margin-bottom: 18px;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+.info-section h4 {
+    color: var(--terracotta);
+    margin-top: 18px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.info-section ul {
+    margin-left: 20px;
+    line-height: 1.9;
+}
+
+.info-section li {
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.info-section p {
+    color: var(--text-dark);
+    line-height: 1.7;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 12px rgba(107, 91, 77, 0.2);
+    border: 2px solid var(--earth-brown);
+}
+
+.status-legal {
+    background: var(--legal-green);
+    color: white;
+}
+
+.status-medical {
+    background: var(--medical-blue);
+    color: white;
+}
+
+.status-decrim {
+    background: var(--decrim-yellow);
+    color: var(--text-dark);
+}
+
+.status-illegal {
+    background: var(--illegal-red);
+    color: white;
+}
+
+/* Footer */
+.footer {
+    background: rgba(61, 61, 61, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--sage-green);
+}
+
+.footer p {
+    margin-bottom: 12px;
+    font-size: 1em;
+    color: var(--warm-cream);
+}
+
+.footer strong {
+    color: var(--sage-green);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+.footer a {
+    color: var(--sage-green);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.footer a:hover {
+    color: var(--terracotta);
+    border-bottom: 2px solid var(--terracotta);
+}
+
+.disclaimer {
+    font-size: 0.9em;
+    color: var(--clay-orange);
+    font-style: normal;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--sage-green);
+    line-height: 1.6;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--soft-sand);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sage-green);
+    border-radius: 6px;
+    border: 2px solid var(--soft-sand);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--forest-green);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .federal-section {
+        max-height: none;
+    }
+
+    .legend {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 20px;
+    }
+
+    .logo-section h1 {
+        font-size: 1.8em;
+    }
+
+    .subtitle {
+        font-size: 1em;
+    }
+
+    .legend {
+        gap: 10px;
+    }
+
+    .legend-item {
+        font-size: 0.85em;
+    }
+
+    .legend-color {
+        width: 25px;
+        height: 25px;
+    }
+
+    .map-section, .federal-section {
+        padding: 20px;
+    }
+
+    .map-container {
+        min-height: 300px;
+        padding: 15px;
+    }
+
+    .map-instruction {
+        font-size: 0.9em;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 25px;
+        margin: 10% auto;
+        max-height: 80vh;
+    }
+
+    #stateName {
+        font-size: 1.6em;
+    }
+
+    .info-section h3 {
+        font-size: 1.2em;
+    }
+
+    .federal-section {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+
+    .header {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .logo-section h1 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-top: 15px;
+    }
+
+    .map-section {
+        padding: 15px;
+    }
+
+    .map-container {
+        min-height: 250px;
+        padding: 10px;
+    }
+
+    .map-instruction {
+        font-size: 0.85em;
+    }
+
+    .federal-section {
+        padding: 15px;
+        max-height: 400px;
+    }
+
+    .federal-section h2 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+
+    .federal-item {
+        padding: 15px;
+    }
+
+    .federal-item h3 {
+        font-size: 1.1em;
+    }
+
+    .modal-content {
+        padding: 20px;
+        margin: 5% auto;
+        max-height: 90vh;
+    }
+
+    #stateName {
+        font-size: 1.4em;
+        margin-bottom: 25px;
+    }
+
+    .info-section {
+        padding: 20px;
+    }
+
+    .info-section h3 {
+        font-size: 1.1em;
+    }
+
+    .close {
+        font-size: 32px;
+    }
+}
+
+/* Landscape orientation for mobile devices */
+@media (max-width: 896px) and (orientation: landscape) {
+    .container {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+
+    .logo-section h1 {
+        font-size: 1.6em;
+    }
+
+    .subtitle {
+        font-size: 0.95em;
+        margin-bottom: 15px;
+    }
+
+    .legend {
+        padding-top: 15px;
+    }
+
+    .main-content {
+        gap: 20px;
+    }
+
+    .map-container {
+        min-height: 350px;
+    }
+
+    .federal-section {
+        max-height: 350px;
+    }
+
+    .modal-content {
+        margin: 2% auto;
+        max-height: 95vh;
+        padding: 20px;
+    }
+
+    #stateName {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .info-section {
+        padding: 15px;
+    }
+}
+
+/* Improved scrolling for touch devices */
+.federal-section,
+.modal-content {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Focus styles for accessibility */
+.state:focus {
+    outline: 3px solid var(--forest-green);
+    outline-offset: 2px;
+}
+
+/* Improve button touch targets on mobile */
+@media (max-width: 768px) {
+    .close {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
