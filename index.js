@@ -383,6 +383,7 @@ const stateData = {
 // Initialize map
 function initMap() {
     const container = document.getElementById('mapContainer');
+    const viewToggle = document.getElementById('viewToggle');
     const width = 960;
     const height = 600;
 
@@ -394,8 +395,8 @@ function initMap() {
         .style('height', 'auto');
 
     const g = svg.append('g');
-    const projection = d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
-    const path = d3.geoPath().projection(projection);
+    const path = d3.geoPath();
+    let currentView = 'us';
 
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
         .then(response => {
@@ -430,6 +431,9 @@ function initMap() {
                 { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410] }
             ];
 
+            const statesGroup = g.append('g').attr('class', 'states');
+            const markerGroup = g.append('g').attr('class', 'territory-markers');
+
             const missingStates = states.features
                 .map(f => getStateName(f.id) || `Unknown-${f.id}`)
                 .filter(name => !stateData[name]);
@@ -438,72 +442,109 @@ function initMap() {
                 console.warn('States without data:', missingStates.join(', '));
             }
 
-            g.selectAll('path')
-                .data(states.features)
-                .enter()
-                .append('path')
-                .attr('d', path)
-                .attr('class', d => {
-                    const name = getStateName(d.id);
-                    const status = stateData[name] ? stateData[name].status : 'illegal';
-                    console.log(`State: ${name}, ID: ${d.id}, Status: ${status}`);
-                    return `state ${status}`;
-                })
-                .attr('data-state', d => getStateName(d.id))
-                .attr('tabindex', '0')
-                .attr('role', 'button')
-                .attr('aria-label', d => {
-                    const name = getStateName(d.id);
-                    return name ? `View ${name} information` : 'State';
-                })
-                .on('click', (event, d) => {
-                    event.preventDefault();
-                    const name = getStateName(d.id);
-                    if (name && stateData[name]) {
-                        console.log(`Clicked: ${name}`);
-                        showStateInfo(name);
-                    }
-                })
-                .on('touchend', (event, d) => {
-                    event.preventDefault();
-                    const name = getStateName(d.id);
-                    if (name && stateData[name]) {
-                        console.log(`Touched: ${name}`);
-                        showStateInfo(name);
-                    }
+            const renderMap = (viewMode = 'us') => {
+                const projection = viewMode === 'global'
+                    ? d3.geoMercator().center([-120, 28]).scale(230).translate([width / 2, height / 2])
+                    : d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
+
+                path.projection(projection);
+
+                const statePaths = statesGroup.selectAll('path')
+                    .data(states.features, d => getStateName(d.id));
+
+                const statePathsEnter = statePaths.enter()
+                    .append('path')
+                    .attr('data-state', d => getStateName(d.id))
+                    .attr('tabindex', '0')
+                    .attr('role', 'button')
+                    .attr('aria-label', d => {
+                        const name = getStateName(d.id);
+                        return name ? `View ${name} information` : 'State';
+                    })
+                    .on('click', (event, d) => {
+                        event.preventDefault();
+                        const name = getStateName(d.id);
+                        if (name && stateData[name]) {
+                            console.log(`Clicked: ${name}`);
+                            showStateInfo(name);
+                        }
+                    })
+                    .on('touchend', (event, d) => {
+                        event.preventDefault();
+                        const name = getStateName(d.id);
+                        if (name && stateData[name]) {
+                            console.log(`Touched: ${name}`);
+                            showStateInfo(name);
+                        }
+                    });
+
+                statePathsEnter.merge(statePaths)
+                    .attr('d', path)
+                    .attr('class', d => {
+                        const name = getStateName(d.id);
+                        const status = stateData[name] ? stateData[name].status : 'illegal';
+                        return `state ${status}`;
+                    });
+
+                const territories = fallbackTerritories
+                    .filter(territory => !states.features.some(f => getStateName(f.id) === territory.name));
+
+                const markers = markerGroup.selectAll('circle')
+                    .data(territories, territory => territory.name);
+
+                const markersEnter = markers.enter()
+                    .append('circle')
+                    .attr('r', 10)
+                    .attr('data-state', territory => territory.name)
+                    .attr('tabindex', '0')
+                    .attr('role', 'button')
+                    .attr('aria-label', territory => `View ${territory.name} information`)
+                    .on('click', (event, territory) => {
+                        event.preventDefault();
+                        if (stateData[territory.name]) {
+                            showStateInfo(territory.name);
+                        }
+                    })
+                    .on('touchend', (event, territory) => {
+                        event.preventDefault();
+                        if (stateData[territory.name]) {
+                            showStateInfo(territory.name);
+                        }
+                    });
+
+                markersEnter.merge(markers)
+                    .attr('cx', territory => {
+                        const projected = projection(territory.coordinates);
+                        return (projected || territory.fallback)[0];
+                    })
+                    .attr('cy', territory => {
+                        const projected = projection(territory.coordinates);
+                        return (projected || territory.fallback)[1];
+                    })
+                    .attr('class', territory => {
+                        const territoryStatus = stateData[territory.name] ? stateData[territory.name].status : 'illegal';
+                        return `territory-marker ${territoryStatus}`;
+                    });
+            };
+
+            const updateToggleLabel = () => {
+                if (!viewToggle) return;
+                const isGlobal = currentView === 'global';
+                viewToggle.classList.toggle('is-global', isGlobal);
+                viewToggle.textContent = isGlobal ? '🗺️ Back to U.S. view' : '🌐 Show territories view';
+                viewToggle.setAttribute('aria-pressed', isGlobal);
+            };
+
+            renderMap(currentView);
+            updateToggleLabel();
+
+            if (viewToggle) {
+                viewToggle.addEventListener('click', () => {
+                    currentView = currentView === 'us' ? 'global' : 'us';
+                    renderMap(currentView);
+                    updateToggleLabel();
                 });
-
-            const markerGroup = g.append('g').attr('class', 'territory-markers');
-
-            fallbackTerritories
-                .filter(territory => !states.features.some(f => getStateName(f.id) === territory.name))
-                .forEach(territory => {
-                    const projected = projection(territory.coordinates);
-                    const [x, y] = projected || territory.fallback;
-                    const territoryStatus = stateData[territory.name] ? stateData[territory.name].status : 'illegal';
-
-                    markerGroup.append('circle')
-                        .attr('cx', x)
-                        .attr('cy', y)
-                        .attr('r', 10)
-                        .attr('class', `territory-marker ${territoryStatus}`)
-                        .attr('data-state', territory.name)
-                        .attr('tabindex', '0')
-                        .attr('role', 'button')
-                        .attr('aria-label', `View ${territory.name} information`)
-                        .on('click', (event) => {
-                            event.preventDefault();
-                            if (stateData[territory.name]) {
-                                showStateInfo(territory.name);
-                            }
-                        })
-                        .on('touchend', (event) => {
-                            event.preventDefault();
-                            if (stateData[territory.name]) {
-                                showStateInfo(territory.name);
-                            }
-                        });
-                });
+            }
 
             console.log('✓ Map loaded with', states.features.length, 'features');
 
