@@ -397,6 +397,12 @@ function initMap() {
         })
         .then(us => {
             const states = topojson.feature(us, us.objects.states);
+
+            const getStateName = (id) => {
+                if (id == null) return undefined;
+                const numericId = parseInt(id, 10);
+                return stateIdToName[numericId] || stateIdToName[id];
+            };
             
             const stateIdToName = {
                 11: 'District of Columbia',
@@ -412,7 +418,7 @@ function initMap() {
             };
 
             const missingStates = states.features
-                .map(f => stateIdToName[f.id] || `Unknown-${f.id}`)
+                .map(f => getStateName(f.id) || `Unknown-${f.id}`)
                 .filter(name => !stateData[name]);
 
             if (missingStates.length) {
@@ -425,21 +431,21 @@ function initMap() {
                 .append('path')
                 .attr('d', path)
                 .attr('class', d => {
-                    const name = stateIdToName[d.id];
+                    const name = getStateName(d.id);
                     const status = stateData[name] ? stateData[name].status : 'illegal';
                     console.log(`State: ${name}, ID: ${d.id}, Status: ${status}`);
                     return `state ${status}`;
                 })
-                .attr('data-state', d => stateIdToName[d.id])
+                .attr('data-state', d => getStateName(d.id))
                 .attr('tabindex', '0')
                 .attr('role', 'button')
                 .attr('aria-label', d => {
-                    const name = stateIdToName[d.id];
+                    const name = getStateName(d.id);
                     return name ? `View ${name} information` : 'State';
                 })
                 .on('click', (event, d) => {
                     event.preventDefault();
-                    const name = stateIdToName[d.id];
+                    const name = getStateName(d.id);
                     if (name && stateData[name]) {
                         console.log(`Clicked: ${name}`);
                         showStateInfo(name);
@@ -447,7 +453,7 @@ function initMap() {
                 })
                 .on('touchend', (event, d) => {
                     event.preventDefault();
-                    const name = stateIdToName[d.id];
+                    const name = getStateName(d.id);
                     if (name && stateData[name]) {
                         console.log(`Touched: ${name}`);
                         showStateInfo(name);
