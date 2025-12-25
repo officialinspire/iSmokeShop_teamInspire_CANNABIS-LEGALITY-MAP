@@ -186,19 +186,40 @@ body {
     }
 }
 
-.state.fully-legal {
+.territory-marker {
+    stroke: var(--earth-brown);
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.95;
+}
+
+.territory-marker:hover,
+.territory-marker:active,
+.territory-marker:focus {
+    opacity: 1;
+    filter: brightness(1.1);
+    stroke: var(--forest-green);
+    stroke-width: 2;
+}
+
+.state.fully-legal,
+.territory-marker.fully-legal {
     fill: var(--legal-green);
 }
 
-.state.medical-only {
+.state.medical-only,
+.territory-marker.medical-only {
     fill: var(--medical-blue);
 }
 
-.state.decriminalized {
+.state.decriminalized,
+.territory-marker.decriminalized {
     fill: var(--decrim-yellow);
 }
 
-.state.illegal {
+.state.illegal,
+.territory-marker.illegal {
     fill: var(--illegal-red);
 }
 

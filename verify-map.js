@@ -41,7 +41,7 @@ const allStates = [
 const stateIdToName = {
     1: 'Alabama', 2: 'Alaska', 4: 'Arizona', 5: 'Arkansas',
     6: 'California', 8: 'Colorado', 9: 'Connecticut', 10: 'Delaware',
-    12: 'Florida', 13: 'Georgia', 15: 'Hawaii', 16: 'Idaho',
+    11: 'District of Columbia', 12: 'Florida', 13: 'Georgia', 15: 'Hawaii', 16: 'Idaho',
     17: 'Illinois', 18: 'Indiana', 19: 'Iowa', 20: 'Kansas',
     21: 'Kentucky', 22: 'Louisiana', 23: 'Maine', 24: 'Maryland',
     25: 'Massachusetts', 26: 'Michigan', 27: 'Minnesota', 28: 'Mississippi',
@@ -51,7 +51,7 @@ const stateIdToName = {
     41: 'Oregon', 42: 'Pennsylvania', 44: 'Rhode Island', 45: 'South Carolina',
     46: 'South Dakota', 47: 'Tennessee', 48: 'Texas', 49: 'Utah',
     50: 'Vermont', 51: 'Virginia', 53: 'Washington', 54: 'West Virginia',
-    55: 'Wisconsin', 56: 'Wyoming'
+    55: 'Wisconsin', 56: 'Wyoming', 66: 'Guam', 72: 'Puerto Rico', 78: 'U.S. Virgin Islands'
 };
 
 // Check 1: Verify stateIdToName in code matches our reference
@@ -63,10 +63,10 @@ if (codeStateIdMatch) {
     // Count entries
     const idMatches = codeStateIdMatch[0].match(/\d+:/g);
     console.log(`   Found ${idMatches.length} state ID mappings`);
-    if (idMatches.length === 52) {
-        console.log('✅ All 50 states + 2 territories have ID mappings');
+    if (idMatches.length === 54) {
+        console.log('✅ All 50 states + District of Columbia + 3 territories have ID mappings');
     } else {
-        console.log(`⚠️  Expected 52 entries (50 states + 2 territories), found ${idMatches.length}`);
+        console.log(`⚠️  Expected 54 entries (50 states + District of Columbia + 3 territories), found ${idMatches.length}`);
     }
 } else {
     console.log('❌ stateIdToName mapping not found in code');
@@ -115,7 +115,7 @@ Object.keys(statusCounts).forEach(status => {
 });
 
 const expectedCounts = {
-    'fully-legal': 24,
+    'fully-legal': 26,
     'medical-only': 14,  // Includes Kentucky + Puerto Rico + Guam
     'decriminalized': 2,
     'illegal': 12
@@ -129,8 +129,8 @@ Object.entries(statusCounts).forEach(([status, count]) => {
     console.log(`${match} ${status.padEnd(20)} Count: ${count.toString().padStart(2)} (Expected: ${expected})`);
 });
 
-console.log(`\nTotal states + territories: ${totalStates} (Expected: 52)`);
-if (totalStates === 52) {
+console.log(`\nTotal states + territories: ${totalStates} (Expected: 54)`);
+if (totalStates === 54) {
     console.log('✅ Total matches expected');
 } else {
     console.log('❌ Total does not match expected');
@@ -170,8 +170,8 @@ console.log('-'.repeat(80));
 const modalChecks = [
     { name: 'showStateInfo function', pattern: /function showStateInfo\(stateName\)/ },
     { name: 'Modal HTML element', pattern: /<div id="stateModal" class="modal">/ },
-    { name: 'Click handler', pattern: /\.on\('click',\s*function/ },
-    { name: 'statusClassMap', pattern: /const statusClassMap = {/ }
+    { name: 'Click handler', pattern: /\.on\('click',\s*(?:function|\()/ },
+    { name: 'status map', pattern: /const statusMap = {/ }
 ];
 
 modalChecks.forEach(check => {
@@ -241,7 +241,7 @@ console.log('='.repeat(80));
 console.log('');
 console.log('State Data:');
 console.log(`  • Total states mapped: ${foundStates.length}/50`);
-console.log(`  • Total territories: 2 (Puerto Rico, Guam)`);
+console.log(`  • Total territories: 3 (Puerto Rico, Guam, U.S. Virgin Islands)`);
 console.log(`  • Fully Legal: ${statusCounts['fully-legal']}`);
 console.log(`  • Medical Only: ${statusCounts['medical-only']} (includes 2 territories)`);
 console.log(`  • Decriminalized: ${statusCounts['decriminalized']}`);

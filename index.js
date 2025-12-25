@@ -84,6 +84,13 @@ const stateData = {
         dmt: { status: "Illegal", notes: "Schedule I substance under federal law." },
         peyote: { status: "Illegal for general population", notes: "Religious exemptions apply." }
     },
+    "U.S. Virgin Islands": {
+        status: "fully-legal",
+        cannabis: { recreational: "Legal for adults 21+", medical: "Legal with medical card", possession: "Up to 2 oz of cannabis flower, 14 grams of concentrate", cultivation: "Home grow permitted with medical authorization", notes: "Adult-use cannabis legalized in 2023 with licensing and tax framework under the Virgin Islands Cannabis Use Act." },
+        psilocybin: { status: "Illegal", notes: "No decriminalization or medical program." },
+        dmt: { status: "Illegal", notes: "Schedule I substance under federal law." },
+        peyote: { status: "Illegal for general population", notes: "Religious exemptions may apply for recognized ceremonies." }
+    },
     "Hawaii": {
         status: "medical-only",
         cannabis: { recreational: "Illegal (decriminalized)", medical: "Legal with medical card", possession: "Small amounts decriminalized (3 grams or less)", cultivation: "Medical patients only, up to 10 plants", notes: "First state to legalize medical marijuana via legislature (2000)." },
@@ -403,7 +410,7 @@ function initMap() {
                 const numericId = parseInt(id, 10);
                 return stateIdToName[numericId] || stateIdToName[id];
             };
-            
+
             const stateIdToName = {
                 11: 'District of Columbia',
                 1: 'Alabama', 2: 'Alaska', 4: 'Arizona', 5: 'Arkansas', 6: 'California', 8: 'Colorado',
@@ -414,8 +421,14 @@ function initMap() {
                 35: 'New Mexico', 36: 'New York', 37: 'North Carolina', 38: 'North Dakota', 39: 'Ohio', 40: 'Oklahoma',
                 41: 'Oregon', 42: 'Pennsylvania', 44: 'Rhode Island', 45: 'South Carolina', 46: 'South Dakota',
                 47: 'Tennessee', 48: 'Texas', 49: 'Utah', 50: 'Vermont', 51: 'Virginia', 53: 'Washington',
-                54: 'West Virginia', 55: 'Wisconsin', 56: 'Wyoming', 66: 'Guam', 72: 'Puerto Rico'
+                54: 'West Virginia', 55: 'Wisconsin', 56: 'Wyoming', 66: 'Guam', 72: 'Puerto Rico', 78: 'U.S. Virgin Islands'
             };
+
+            const fallbackTerritories = [
+                { name: 'Puerto Rico', coordinates: [-66.5901, 18.2208], fallback: [820, 430] },
+                { name: 'Guam', coordinates: [144.7937, 13.4443], fallback: [120, 500] },
+                { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410] }
+            ];
 
             const missingStates = states.features
                 .map(f => getStateName(f.id) || `Unknown-${f.id}`)
@@ -460,10 +473,42 @@ function initMap() {
                     }
                 });
 
+            const markerGroup = g.append('g').attr('class', 'territory-markers');
+
+            fallbackTerritories
+                .filter(territory => !states.features.some(f => getStateName(f.id) === territory.name))
+                .forEach(territory => {
+                    const projected = projection(territory.coordinates);
+                    const [x, y] = projected || territory.fallback;
+                    const territoryStatus = stateData[territory.name] ? stateData[territory.name].status : 'illegal';
+
+                    markerGroup.append('circle')
+                        .attr('cx', x)
+                        .attr('cy', y)
+                        .attr('r', 10)
+                        .attr('class', `territory-marker ${territoryStatus}`)
+                        .attr('data-state', territory.name)
+                        .attr('tabindex', '0')
+                        .attr('role', 'button')
+                        .attr('aria-label', `View ${territory.name} information`)
+                        .on('click', (event) => {
+                            event.preventDefault();
+                            if (stateData[territory.name]) {
+                                showStateInfo(territory.name);
+                            }
+                        })
+                        .on('touchend', (event) => {
+                            event.preventDefault();
+                            if (stateData[territory.name]) {
+                                showStateInfo(territory.name);
+                            }
+                        });
+                });
+
             console.log('✓ Map loaded with', states.features.length, 'features');
 
             // Verify problematic states
-            const testStates = ['California', 'Colorado', 'Nevada', 'Alaska', 'Connecticut', 'Alabama', 'Puerto Rico', 'Guam', 'District of Columbia'];
+            const testStates = ['California', 'Colorado', 'Nevada', 'Alaska', 'Connecticut', 'Alabama', 'Puerto Rico', 'Guam', 'U.S. Virgin Islands', 'District of Columbia'];
             testStates.forEach(stateName => {
                 const data = stateData[stateName];
                 console.log(`✓ ${stateName}: ${data ? data.status : 'MISSING'}`);
