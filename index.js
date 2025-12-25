@@ -1,5 +1,12 @@
 // COMPLETE STATE DATA - ALL 50 STATES + 2 TERRITORIES
 const stateData = {
+    "District of Columbia": {
+        status: "fully-legal",
+        cannabis: { recreational: "Legal for adults 21+", medical: "Legal with medical card", possession: "Up to 2 oz in public, 10 oz at home", cultivation: "Up to 6 plants (3 mature) per adult", notes: "Adult-use sales authorized; medical program longstanding with patient reciprocity." },
+        psilocybin: { status: "Decriminalized for personal use", notes: "Initiative 81 (2020) made enforcement the lowest priority for entheogenic plants." },
+        dmt: { status: "Decriminalized for personal use", notes: "Covered under the same lowest-enforcement-priority measure as other entheogens." },
+        peyote: { status: "Decriminalized for personal use", notes: "Protected by local decriminalization; religious exemptions also apply." }
+    },
     "Alabama": {
         status: "illegal",
         cannabis: { recreational: "Illegal", medical: "Medical program approved but not yet operational", possession: "Criminal penalties apply", cultivation: "Illegal", notes: "Medical program approved in 2021. Licenses approved December 2024. Expected to launch spring 2026." },
@@ -392,7 +399,8 @@ function initMap() {
             const states = topojson.feature(us, us.objects.states);
             
             const stateIdToName = {
-                1: 'Alabama', 2: 'Alaska', 4: 'Arizona', 5: 'Arkansas', 6: 'California', 8: 'Colorado', 
+                11: 'District of Columbia',
+                1: 'Alabama', 2: 'Alaska', 4: 'Arizona', 5: 'Arkansas', 6: 'California', 8: 'Colorado',
                 9: 'Connecticut', 10: 'Delaware', 12: 'Florida', 13: 'Georgia', 15: 'Hawaii', 16: 'Idaho',
                 17: 'Illinois', 18: 'Indiana', 19: 'Iowa', 20: 'Kansas', 21: 'Kentucky', 22: 'Louisiana',
                 23: 'Maine', 24: 'Maryland', 25: 'Massachusetts', 26: 'Michigan', 27: 'Minnesota', 28: 'Mississippi',
@@ -402,6 +410,14 @@ function initMap() {
                 47: 'Tennessee', 48: 'Texas', 49: 'Utah', 50: 'Vermont', 51: 'Virginia', 53: 'Washington',
                 54: 'West Virginia', 55: 'Wisconsin', 56: 'Wyoming', 66: 'Guam', 72: 'Puerto Rico'
             };
+
+            const missingStates = states.features
+                .map(f => stateIdToName[f.id] || `Unknown-${f.id}`)
+                .filter(name => !stateData[name]);
+
+            if (missingStates.length) {
+                console.warn('States without data:', missingStates.join(', '));
+            }
 
             g.selectAll('path')
                 .data(states.features)
@@ -439,9 +455,9 @@ function initMap() {
                 });
 
             console.log('✓ Map loaded with', states.features.length, 'features');
-            
+
             // Verify problematic states
-            const testStates = ['California', 'Colorado', 'Nevada', 'Alaska', 'Connecticut', 'Alabama', 'Puerto Rico', 'Guam'];
+            const testStates = ['California', 'Colorado', 'Nevada', 'Alaska', 'Connecticut', 'Alabama', 'Puerto Rico', 'Guam', 'District of Columbia'];
             testStates.forEach(stateName => {
                 const data = stateData[stateName];
                 console.log(`✓ ${stateName}: ${data ? data.status : 'MISSING'}`);
