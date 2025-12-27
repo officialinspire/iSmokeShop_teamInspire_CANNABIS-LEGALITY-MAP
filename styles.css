@@ -366,10 +366,14 @@ p, li, span, button {
     pointer-events: all;
     transition: transform 0.3s ease, filter 0.3s ease;
     filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.18));
+    transform: translate(var(--slide-x, 0), var(--slide-y, 0));
+    transform-box: fill-box;
+    transform-origin: center;
+    will-change: transform, filter;
 }
 
 .territory-slide:hover {
-    transform: translateY(-6px);
+    transform: translate(var(--slide-x, 0), var(--slide-y, 0)) translateY(-6px);
     filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22));
 }
 
