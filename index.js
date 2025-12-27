@@ -426,13 +426,80 @@ function initMap() {
             };
 
             const fallbackTerritories = [
-                { name: 'Puerto Rico', coordinates: [-66.5901, 18.2208], fallback: [820, 430], slidePosition: [360, 280] },
-                { name: 'Guam', coordinates: [144.7937, 13.4443], fallback: [120, 500], slidePosition: [160, 420] },
-                { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410], slidePosition: [620, 300] }
+                { name: 'Puerto Rico', coordinates: [-66.5901, 18.2208], fallback: [820, 430], slidePosition: [120, 120] },
+                { name: 'Guam', coordinates: [144.7937, 13.4443], fallback: [120, 500], slidePosition: [360, 120] },
+                { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410], slidePosition: [600, 120] }
+            ];
+
+            const territorySlides = [
+                {
+                    name: 'Puerto Rico',
+                    size: [260, 200],
+                    position: [80, 150],
+                    feature: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                                [-67.5, 17.8],
+                                [-65.3, 17.8],
+                                [-65.3, 18.6],
+                                [-67.5, 18.6],
+                                [-67.5, 17.8]
+                            ]]
+                        }
+                    }
+                },
+                {
+                    name: 'U.S. Virgin Islands',
+                    size: [260, 200],
+                    position: [360, 150],
+                    feature: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'MultiPolygon',
+                            coordinates: [
+                                [[
+                                    [-64.9, 18.2],
+                                    [-64.4, 18.2],
+                                    [-64.4, 18.45],
+                                    [-64.9, 18.45],
+                                    [-64.9, 18.2]
+                                ]],
+                                [[
+                                    [-64.9, 18.05],
+                                    [-64.6, 18.05],
+                                    [-64.6, 18.15],
+                                    [-64.9, 18.15],
+                                    [-64.9, 18.05]
+                                ]]
+                            ]
+                        }
+                    }
+                },
+                {
+                    name: 'Guam',
+                    size: [260, 200],
+                    position: [640, 150],
+                    feature: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                                [144.55, 13.2],
+                                [145.0, 13.2],
+                                [145.0, 13.7],
+                                [144.55, 13.7],
+                                [144.55, 13.2]
+                            ]]
+                        }
+                    }
+                }
             ];
 
             const statesGroup = g.append('g').attr('class', 'states');
             const markerGroup = g.append('g').attr('class', 'territory-markers');
+            const slidesGroup = g.append('g').attr('class', 'territory-slides');
 
             const missingStates = states.features
                 .map(f => getStateName(f.id) || `Unknown-${f.id}`)
@@ -442,14 +509,9 @@ function initMap() {
                 console.warn('States without data:', missingStates.join(', '));
             }
 
-            const territoryFeatures = fallbackTerritories.map(territory => ({
-                type: 'Feature',
-                geometry: { type: 'Point', coordinates: territory.coordinates },
-                properties: { name: territory.name }
-            }));
-
             const renderMap = (viewMode = 'us') => {
                 const isTerritoryView = viewMode === 'territories';
+                const slidePadding = 16;
                 const projection = isTerritoryView
                     ? null
                     : d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
@@ -499,8 +561,9 @@ function initMap() {
                 const territories = fallbackTerritories
                     .filter(territory => !states.features.some(f => getStateName(f.id) === territory.name));
 
+                const markerData = isTerritoryView ? [] : territories;
                 const markers = markerGroup.selectAll('circle')
-                    .data(territories, territory => territory.name);
+                    .data(markerData, territory => territory.name);
 
                 const markersEnter = markers.enter()
                     .append('circle')
@@ -543,7 +606,7 @@ function initMap() {
                     });
 
                 const labels = markerGroup.selectAll('text')
-                    .data(isTerritoryView ? territories : [], territory => territory.name);
+                    .data(isTerritoryView ? [] : markerData, territory => territory.name);
 
                 labels.enter()
                     .append('text')
@@ -565,9 +628,69 @@ function initMap() {
                         const projected = projection ? projection(territory.coordinates) : null;
                         return (projected || territory.fallback)[1] + 14;
                     })
-                    .attr('display', isTerritoryView ? null : 'none');
+                    .attr('display', isTerritoryView ? 'none' : null);
 
                 labels.exit().remove();
+
+                const slides = slidesGroup.selectAll('.territory-slide')
+                    .data(isTerritoryView ? territorySlides : [], slide => slide.name);
+
+                const slidesEnter = slides.enter()
+                    .append('g')
+                    .attr('class', 'territory-slide')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
+                    .attr('aria-label', slide => `View ${slide.name} information`)
+                    .on('click', (event, slide) => {
+                        event.preventDefault();
+                        if (stateData[slide.name]) {
+                            showStateInfo(slide.name);
+                        }
+                    })
+                    .on('keydown', (event, slide) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            if (stateData[slide.name]) {
+                                showStateInfo(slide.name);
+                            }
+                        }
+                    });
+
+                slidesEnter.append('rect').attr('class', 'territory-slide-bg');
+                slidesEnter.append('path').attr('class', 'territory-outline');
+                slidesEnter.append('text').attr('class', 'territory-slide-title');
+
+                const slidesMerged = slidesEnter.merge(slides);
+
+                slidesMerged
+                    .attr('transform', slide => `translate(${slide.position[0]}, ${slide.position[1]})`);
+
+                slidesMerged.select('.territory-slide-bg')
+                    .attr('width', slide => slide.size[0])
+                    .attr('height', slide => slide.size[1]);
+
+                slidesMerged.select('.territory-outline')
+                    .attr('class', slide => {
+                        const status = stateData[slide.name] ? stateData[slide.name].status : 'illegal';
+                        return `territory-outline ${status}`;
+                    })
+                    .attr('d', slide => {
+                        const projection = d3.geoMercator().fitSize(
+                            [slide.size[0] - slidePadding * 2, slide.size[1] - slidePadding * 2],
+                            slide.feature
+                        );
+                        const slidePath = d3.geoPath(projection);
+                        return slidePath(slide.feature);
+                    })
+                    .attr('transform', `translate(${slidePadding}, ${slidePadding})`);
+
+                slidesMerged.select('.territory-slide-title')
+                    .attr('x', slide => slide.size[0] / 2)
+                    .attr('y', 24)
+                    .attr('text-anchor', 'middle')
+                    .text(slide => slide.name);
+
+                slides.exit().remove();
             };
 
             const updateToggleLabel = () => {
