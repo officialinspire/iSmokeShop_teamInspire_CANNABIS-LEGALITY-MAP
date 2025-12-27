@@ -551,6 +551,9 @@ function initMap() {
             territorySlides = createTerritorySlides();
 
             const renderMap = (viewMode = 'us') => {
+                const transition = d3.transition()
+                    .duration(450)
+                    .ease(d3.easeCubicOut);
                 const isTerritoryView = viewMode === 'territories';
                 const slidePadding = 24;
                 const slideTitleSpace = 40;
@@ -592,6 +595,10 @@ function initMap() {
                     });
 
                 statePathsEnter.merge(statePaths)
+                    .attr('aria-hidden', isTerritoryView)
+                    .style('pointer-events', isTerritoryView ? 'none' : 'auto')
+                    .transition(transition)
+                    .style('opacity', isTerritoryView ? 0 : 1)
                     .attr('display', isTerritoryView ? 'none' : null)
                     .attr('d', projection ? path : null)
                     .attr('class', d => {
@@ -627,6 +634,7 @@ function initMap() {
                     });
 
                 markersEnter.merge(markers)
+                    .transition(transition)
                     .attr('r', isTerritoryView ? 70 : 10)
                     .attr('cx', territory => {
                         const projected = projection ? projection(territory.coordinates) : null;
@@ -647,6 +655,11 @@ function initMap() {
                         return `territory-marker ${territoryStatus}`;
                     });
 
+                markers.exit()
+                    .transition(transition)
+                    .style('opacity', 0)
+                    .remove();
+
                 const labels = markerGroup.selectAll('text')
                     .data(isTerritoryView ? [] : markerData, territory => territory.name);
 
@@ -656,6 +669,7 @@ function initMap() {
                     .attr('text-anchor', 'middle')
                     .text(territory => territory.name)
                     .merge(labels)
+                    .transition(transition)
                     .attr('x', territory => {
                         if (isTerritoryView && territory.slidePosition) {
                             return territory.slidePosition[0];
@@ -670,6 +684,7 @@ function initMap() {
                         const projected = projection ? projection(territory.coordinates) : null;
                         return (projected || territory.fallback)[1] + 14;
                     })
+                    .style('opacity', isTerritoryView ? 0 : 1)
                     .attr('display', isTerritoryView ? 'none' : null);
 
                 labels.exit().remove();
@@ -683,6 +698,7 @@ function initMap() {
                     .attr('role', 'button')
                     .attr('tabindex', '0')
                     .attr('aria-label', slide => `View ${slide.name} information`)
+                    .style('opacity', 0)
                     .on('click', (event, slide) => {
                         event.preventDefault();
                         if (stateData[slide.name]) {
@@ -705,6 +721,8 @@ function initMap() {
                 const slidesMerged = slidesEnter.merge(slides);
 
                 slidesMerged
+                    .transition(transition)
+                    .style('opacity', 1)
                     .attr('transform', slide => `translate(${slide.position[0]}, ${slide.position[1]})`);
 
                 slidesMerged.select('.territory-slide-bg')
@@ -734,7 +752,10 @@ function initMap() {
                     .attr('text-anchor', 'middle')
                     .text(slide => slide.name);
 
-                slides.exit().remove();
+                slides.exit()
+                    .transition(transition)
+                    .style('opacity', 0)
+                    .remove();
             };
 
             const updateToggleLabel = () => {

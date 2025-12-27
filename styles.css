@@ -27,6 +27,8 @@ html {
     --illegal-red: #c45b4d;
     --midnight: #0f1c16;
     --glass-overlay: rgba(18, 31, 26, 0.6);
+    --button-gold: #f8d14a;
+    --button-gold-deep: #d9a441;
 }
 
 body {
@@ -217,9 +219,9 @@ p, li, span, button {
 }
 
 .view-toggle {
-    background: linear-gradient(135deg, var(--forest-green), var(--terracotta));
-    color: var(--text-light);
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, var(--button-gold), var(--button-gold-deep));
+    color: #111;
+    border: 2px solid rgba(0, 0, 0, 0.08);
     border-radius: 999px;
     padding: 12px 18px;
     font-weight: 600;
@@ -236,7 +238,7 @@ p, li, span, button {
     transform: translateY(-2px);
     box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
     outline: none;
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(0, 0, 0, 0.2);
 }
 
 .view-toggle:active {
@@ -246,7 +248,7 @@ p, li, span, button {
 
 .view-toggle.is-global,
 .view-toggle.is-territory {
-    background: linear-gradient(135deg, var(--terracotta), var(--clay-orange));
+    background: linear-gradient(135deg, #ffd761, #e4b63b);
 }
 
 .control-hint {
