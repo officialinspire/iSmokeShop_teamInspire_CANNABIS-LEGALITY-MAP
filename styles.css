@@ -88,13 +88,17 @@ body {
 }
 
 h1, h2 {
-    font-family: 'Umberto', 'Merriweather', 'Montserrat', serif;
+    font-family: 'Semyon Soviet', 'Merriweather', 'Montserrat', serif;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 h3, h4 {
-    font-family: 'Merriweather', 'Montserrat', serif;
+    font-family: 'Merom Sans', 'Merriweather', 'Montserrat', sans-serif;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 p, li, span, button {
@@ -102,7 +106,7 @@ p, li, span, button {
 }
 
 p {
-    font-family: 'Dogica', 'Montserrat', sans-serif;
+    font-family: 'Neomatrix Code Regular', 'Dogica', 'Montserrat', sans-serif;
 }
 
 .header {
@@ -115,21 +119,23 @@ p {
 
 .hero-banner {
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     border-radius: 16px;
     margin-bottom: 32px;
-    padding: 10px;
+    padding: 0;
     background: transparent;
     box-shadow: none;
+    width: 100%;
 }
 
 .hero-banner-image {
     width: 100%;
-    height: auto;
-    max-height: clamp(360px, 42vw, 640px);
-    object-fit: contain;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
     display: block;
     margin: 0 auto;
+    aspect-ratio: 16 / 7;
 }
 
 .hero-details {
