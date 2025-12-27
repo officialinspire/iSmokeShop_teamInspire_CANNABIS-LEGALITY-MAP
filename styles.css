@@ -341,7 +341,7 @@ body {
 .territory-slide-title {
     font-weight: 700;
     fill: var(--earth-brown);
-    font-size: 1.05em;
+    font-size: 1.15em;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
