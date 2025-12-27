@@ -73,7 +73,13 @@ body {
 /* Header Styles */
 .header,
 .map-section,
-.federal-section,
+.federal-section {
+    background: linear-gradient(145deg, rgba(52, 102, 76, 0.9), rgba(98, 146, 116, 0.85));
+    border-radius: 20px;
+    box-shadow: 0 16px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
 .footer {
     background: linear-gradient(145deg, rgba(12, 23, 18, 0.9), rgba(41, 70, 55, 0.85));
     border-radius: 20px;
@@ -81,13 +87,22 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.06);
 }
 
-h1, h2, h3, h4 {
+h1, h2 {
+    font-family: 'Umberto', 'Merriweather', 'Montserrat', serif;
+    letter-spacing: 0.5px;
+}
+
+h3, h4 {
     font-family: 'Merriweather', 'Montserrat', serif;
     letter-spacing: 0.5px;
 }
 
 p, li, span, button {
     color: var(--text-light);
+}
+
+p {
+    font-family: 'Dogica', 'Montserrat', sans-serif;
 }
 
 .header {
