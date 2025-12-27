@@ -29,6 +29,7 @@ html {
     --glass-overlay: rgba(18, 31, 26, 0.6);
     --button-gold: #f8d14a;
     --button-gold-deep: #d9a441;
+    --text-gold: #ffd700;
 }
 
 body {
@@ -103,12 +104,13 @@ h3, h4 {
     max-width: 100%;
 }
 
-p, li, span, button {
+li, span, button {
     color: var(--text-light);
 }
 
 p {
     font-family: 'Neomatrix Code Regular', 'Dogica', 'Montserrat', sans-serif;
+    color: var(--text-gold);
 }
 
 .header {
@@ -165,7 +167,7 @@ p {
 
 .subtitle {
     text-align: center;
-    color: var(--soft-sand);
+    color: var(--text-gold);
     font-size: 1.15em;
     font-style: normal;
     font-weight: 300;
@@ -282,9 +284,8 @@ p {
 }
 
 .map-container {
-    background: radial-gradient(circle at 10% 10%, rgba(239, 193, 102, 0.14), transparent 30%),
-                radial-gradient(circle at 90% 20%, rgba(110, 155, 121, 0.12), transparent 28%),
-                rgba(255, 255, 255, 0.06);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.4)),
+                url('light-yellow-background.webp') center / cover no-repeat;
     border-radius: 18px;
     padding: 30px;
     margin-bottom: 25px;
@@ -426,7 +427,7 @@ p {
 
 .map-instruction {
     text-align: center;
-    color: var(--soft-sand);
+    color: var(--text-gold);
     font-style: normal;
     font-size: 1em;
     font-weight: 300;
@@ -496,11 +497,11 @@ p {
     margin-bottom: 10px;
     line-height: 1.7;
     font-size: 0.98em;
-    color: var(--text-dark);
+    color: var(--text-gold);
 }
 
 .federal-item strong {
-    color: var(--terracotta);
+    color: var(--text-gold);
     font-weight: 600;
 }
 
@@ -638,7 +639,7 @@ p {
 }
 
 .info-section p {
-    color: var(--text-dark);
+    color: var(--text-gold);
     line-height: 1.7;
 }
 
@@ -683,11 +684,11 @@ p {
 .footer p {
     margin-bottom: 12px;
     font-size: 1em;
-    color: var(--soft-sand);
+    color: var(--text-gold);
 }
 
 .footer strong {
-    color: var(--sage-green);
+    color: var(--text-gold);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     font-weight: 600;
 }
@@ -706,7 +707,7 @@ p {
 
 .disclaimer {
     font-size: 0.9em;
-    color: var(--clay-orange);
+    color: var(--text-gold);
     font-style: normal;
     margin-top: 20px;
     padding-top: 20px;
