@@ -259,23 +259,58 @@ body {
 }
 
 .state.fully-legal,
-.territory-marker.fully-legal {
+.territory-marker.fully-legal,
+.territory-outline.fully-legal {
     fill: var(--legal-green);
 }
 
 .state.medical-only,
-.territory-marker.medical-only {
+.territory-marker.medical-only,
+.territory-outline.medical-only {
     fill: var(--medical-blue);
 }
 
 .state.decriminalized,
-.territory-marker.decriminalized {
+.territory-marker.decriminalized,
+.territory-outline.decriminalized {
     fill: var(--decrim-yellow);
 }
 
 .state.illegal,
-.territory-marker.illegal {
+.territory-marker.illegal,
+.territory-outline.illegal {
     fill: var(--illegal-red);
+}
+
+.territory-slides {
+    pointer-events: none;
+}
+
+.territory-slide {
+    pointer-events: all;
+}
+
+.territory-slide-bg {
+    fill: var(--warm-cream);
+    stroke: var(--earth-brown);
+    stroke-width: 2px;
+    rx: 14px;
+    ry: 14px;
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.2));
+}
+
+.territory-outline {
+    stroke: var(--earth-brown);
+    stroke-width: 2px;
+    fill-opacity: 0.9;
+    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.15));
+}
+
+.territory-slide-title {
+    font-weight: 700;
+    fill: var(--earth-brown);
+    font-size: 1.05em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .map-instruction {
