@@ -426,9 +426,9 @@ function initMap() {
             };
 
             const fallbackTerritories = [
-                { name: 'Puerto Rico', coordinates: [-66.5901, 18.2208], fallback: [820, 430] },
-                { name: 'Guam', coordinates: [144.7937, 13.4443], fallback: [120, 500] },
-                { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410] }
+                { name: 'Puerto Rico', coordinates: [-66.5901, 18.2208], fallback: [820, 430], slidePosition: [360, 280] },
+                { name: 'Guam', coordinates: [144.7937, 13.4443], fallback: [120, 500], slidePosition: [160, 420] },
+                { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410], slidePosition: [620, 300] }
             ];
 
             const statesGroup = g.append('g').attr('class', 'states');
@@ -449,17 +449,14 @@ function initMap() {
             }));
 
             const renderMap = (viewMode = 'us') => {
-                const projection = viewMode === 'global'
-                    ? d3.geoMercator().fitExtent(
-                        [[20, 20], [width - 20, height - 20]],
-                        {
-                            type: 'FeatureCollection',
-                            features: [...states.features, ...territoryFeatures]
-                        }
-                    )
+                const isTerritoryView = viewMode === 'territories';
+                const projection = isTerritoryView
+                    ? null
                     : d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
 
-                path.projection(projection);
+                if (projection) {
+                    path.projection(projection);
+                }
 
                 const statePaths = statesGroup.selectAll('path')
                     .data(states.features, d => getStateName(d.id));
@@ -491,7 +488,8 @@ function initMap() {
                     });
 
                 statePathsEnter.merge(statePaths)
-                    .attr('d', path)
+                    .attr('display', isTerritoryView ? 'none' : null)
+                    .attr('d', projection ? path : null)
                     .attr('class', d => {
                         const name = getStateName(d.id);
                         const status = stateData[name] ? stateData[name].status : 'illegal';
@@ -524,27 +522,60 @@ function initMap() {
                     });
 
                 markersEnter.merge(markers)
-                    .attr('r', viewMode === 'global' ? 16 : 10)
+                    .attr('r', isTerritoryView ? 70 : 10)
                     .attr('cx', territory => {
-                        const projected = projection(territory.coordinates);
+                        const projected = projection ? projection(territory.coordinates) : null;
+                        if (isTerritoryView && territory.slidePosition) {
+                            return territory.slidePosition[0];
+                        }
                         return (projected || territory.fallback)[0];
                     })
                     .attr('cy', territory => {
-                        const projected = projection(territory.coordinates);
+                        const projected = projection ? projection(territory.coordinates) : null;
+                        if (isTerritoryView && territory.slidePosition) {
+                            return territory.slidePosition[1];
+                        }
                         return (projected || territory.fallback)[1];
                     })
                     .attr('class', territory => {
                         const territoryStatus = stateData[territory.name] ? stateData[territory.name].status : 'illegal';
                         return `territory-marker ${territoryStatus}`;
                     });
+
+                const labels = markerGroup.selectAll('text')
+                    .data(isTerritoryView ? territories : [], territory => territory.name);
+
+                labels.enter()
+                    .append('text')
+                    .attr('class', 'territory-label')
+                    .attr('text-anchor', 'middle')
+                    .text(territory => territory.name)
+                    .merge(labels)
+                    .attr('x', territory => {
+                        if (isTerritoryView && territory.slidePosition) {
+                            return territory.slidePosition[0];
+                        }
+                        const projected = projection ? projection(territory.coordinates) : null;
+                        return (projected || territory.fallback)[0];
+                    })
+                    .attr('y', territory => {
+                        if (isTerritoryView && territory.slidePosition) {
+                            return territory.slidePosition[1] + 5;
+                        }
+                        const projected = projection ? projection(territory.coordinates) : null;
+                        return (projected || territory.fallback)[1] + 14;
+                    })
+                    .attr('display', isTerritoryView ? null : 'none');
+
+                labels.exit().remove();
             };
 
             const updateToggleLabel = () => {
                 if (!viewToggle) return;
-                const isGlobal = currentView === 'global';
-                viewToggle.classList.toggle('is-global', isGlobal);
-                viewToggle.textContent = isGlobal ? '🗺️ Back to U.S. view' : '🌐 Show territories view';
-                viewToggle.setAttribute('aria-pressed', isGlobal);
+                const isTerritoryView = currentView === 'territories';
+                viewToggle.classList.toggle('is-territory', isTerritoryView);
+                viewToggle.textContent = isTerritoryView ? '🗺️ Back to U.S. view' : '🌐 Show territories view';
+                viewToggle.setAttribute('aria-pressed', isTerritoryView);
             };
 
             renderMap(currentView);
@@ -552,7 +583,7 @@ function initMap() {
 
             if (viewToggle) {
                 viewToggle.addEventListener('click', () => {
-                    currentView = currentView === 'us' ? 'global' : 'us';
+                    currentView = currentView === 'us' ? 'territories' : 'us';
                     renderMap(currentView);
                     updateToggleLabel();
                 });
