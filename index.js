@@ -431,71 +431,89 @@ function initMap() {
                 { name: 'U.S. Virgin Islands', coordinates: [-64.8963, 18.3358], fallback: [800, 410], slidePosition: [600, 120] }
             ];
 
-            const territorySlides = [
-                {
-                    name: 'Puerto Rico',
-                    size: [260, 200],
-                    position: [80, 150],
-                    feature: {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Polygon',
-                            coordinates: [[
-                                [-67.5, 17.8],
-                                [-65.3, 17.8],
-                                [-65.3, 18.6],
-                                [-67.5, 18.6],
-                                [-67.5, 17.8]
-                            ]]
-                        }
+            const territoryFeatureFallbacks = {
+                'Puerto Rico': {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [[
+                            [-67.27, 17.88],
+                            [-66.8, 17.92],
+                            [-66.5, 18.02],
+                            [-66.1, 18.13],
+                            [-65.7, 18.18],
+                            [-65.4, 18.25],
+                            [-65.32, 18.35],
+                            [-65.43, 18.46],
+                            [-65.71, 18.51],
+                            [-66.14, 18.53],
+                            [-66.68, 18.52],
+                            [-67.03, 18.44],
+                            [-67.27, 18.3],
+                            [-67.27, 17.88]
+                        ]]
                     }
                 },
-                {
-                    name: 'U.S. Virgin Islands',
-                    size: [260, 200],
-                    position: [360, 150],
-                    feature: {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'MultiPolygon',
-                            coordinates: [
-                                [[
-                                    [-64.9, 18.2],
-                                    [-64.4, 18.2],
-                                    [-64.4, 18.45],
-                                    [-64.9, 18.45],
-                                    [-64.9, 18.2]
-                                ]],
-                                [[
-                                    [-64.9, 18.05],
-                                    [-64.6, 18.05],
-                                    [-64.6, 18.15],
-                                    [-64.9, 18.15],
-                                    [-64.9, 18.05]
-                                ]]
-                            ]
-                        }
+                'U.S. Virgin Islands': {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'MultiPolygon',
+                        coordinates: [
+                            [[
+                                [-64.92, 18.36],
+                                [-64.83, 18.41],
+                                [-64.69, 18.4],
+                                [-64.63, 18.33],
+                                [-64.71, 18.27],
+                                [-64.86, 18.31],
+                                [-64.92, 18.36]
+                            ]],
+                            [[
+                                [-64.92, 18.12],
+                                [-64.83, 18.17],
+                                [-64.75, 18.11],
+                                [-64.81, 18.03],
+                                [-64.91, 18.05],
+                                [-64.92, 18.12]
+                            ]],
+                            [[
+                                [-64.64, 18.32],
+                                [-64.58, 18.36],
+                                [-64.52, 18.31],
+                                [-64.55, 18.24],
+                                [-64.63, 18.25],
+                                [-64.64, 18.32]
+                            ]]
+                        ]
                     }
                 },
-                {
-                    name: 'Guam',
-                    size: [260, 200],
-                    position: [640, 150],
-                    feature: {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Polygon',
-                            coordinates: [[
-                                [144.55, 13.2],
-                                [145.0, 13.2],
-                                [145.0, 13.7],
-                                [144.55, 13.7],
-                                [144.55, 13.2]
-                            ]]
-                        }
+                'Guam': {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [[
+                            [144.61, 13.23],
+                            [144.75, 13.22],
+                            [144.89, 13.27],
+                            [144.97, 13.38],
+                            [145.01, 13.52],
+                            [144.95, 13.63],
+                            [144.79, 13.7],
+                            [144.66, 13.64],
+                            [144.6, 13.48],
+                            [144.61, 13.23]
+                        ]]
                     }
                 }
-            ];
+            };
+
+            const territorySlideConfigs = {
+                'Puerto Rico': { size: [260, 200], position: [80, 150] },
+                'U.S. Virgin Islands': { size: [260, 200], position: [360, 150] },
+                'Guam': { size: [260, 200], position: [640, 150] }
+            };
+
+            let territorySlides = [];
 
             const statesGroup = g.append('g').attr('class', 'states');
             const markerGroup = g.append('g').attr('class', 'territory-markers');
@@ -508,6 +526,29 @@ function initMap() {
             if (missingStates.length) {
                 console.warn('States without data:', missingStates.join(', '));
             }
+
+            const createTerritorySlides = () => {
+                return Object.entries(territorySlideConfigs)
+                    .map(([name, config]) => {
+                        const matchedFeature = states.features.find(f => getStateName(f.id) === name);
+                        const feature = matchedFeature || territoryFeatureFallbacks[name];
+
+                        if (!feature) {
+                            console.warn(`Missing feature geometry for ${name}`);
+                            return null;
+                        }
+
+                        return {
+                            name,
+                            size: config.size,
+                            position: config.position,
+                            feature
+                        };
+                    })
+                    .filter(Boolean);
+            };
+
+            territorySlides = createTerritorySlides();
 
             const renderMap = (viewMode = 'us') => {
                 const isTerritoryView = viewMode === 'territories';
