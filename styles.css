@@ -713,6 +713,14 @@ p {
     flex-wrap: wrap;
 }
 
+.logo-separator {
+    color: var(--text-gold);
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
 .footer-logo {
     height: 64px;
     width: auto;
