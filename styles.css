@@ -59,12 +59,12 @@ body {
     overflow: hidden;
     border-radius: 16px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 .hero-banner-image {
     width: 100%;
-    height: 260px;
+    height: clamp(320px, 38vw, 520px);
     object-fit: cover;
     display: block;
 }
@@ -72,25 +72,27 @@ body {
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.7) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%);
 }
 
-.hero-content {
-    position: absolute;
-    inset: 0;
+.hero-details {
     display: flex;
     flex-direction: column;
+    gap: 22px;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    padding: 20px;
+    width: 100%;
 }
 
-.hero-content h1 {
-    font-size: 3em;
+.hero-text {
+    max-width: 780px;
+}
+
+.hero-text h1 {
+    font-size: clamp(2.4rem, 3vw + 1rem, 3.6rem);
     color: var(--text-light);
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-weight: 700;
     letter-spacing: 1px;
 }
@@ -98,8 +100,7 @@ body {
 .subtitle {
     text-align: center;
     color: var(--soft-sand);
-    font-size: 1.2em;
-    margin-bottom: 10px;
+    font-size: 1.15em;
     font-style: normal;
     font-weight: 300;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
@@ -110,7 +111,7 @@ body {
     justify-content: center;
     gap: 40px;
     flex-wrap: wrap;
-    padding-top: 30px;
+    padding-top: 26px;
     border-top: 2px solid var(--sage-green);
 }
 
