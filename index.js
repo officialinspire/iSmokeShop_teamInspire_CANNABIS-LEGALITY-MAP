@@ -508,9 +508,9 @@ function initMap() {
             };
 
             const territorySlideConfigs = {
-                'Puerto Rico': { size: [260, 200], position: [80, 150] },
-                'U.S. Virgin Islands': { size: [260, 200], position: [360, 150] },
-                'Guam': { size: [260, 200], position: [640, 150] }
+                'Puerto Rico': { size: [300, 240], position: [20, 140] },
+                'U.S. Virgin Islands': { size: [300, 240], position: [340, 140] },
+                'Guam': { size: [300, 240], position: [660, 140] }
             };
 
             let territorySlides = [];
@@ -552,7 +552,8 @@ function initMap() {
 
             const renderMap = (viewMode = 'us') => {
                 const isTerritoryView = viewMode === 'territories';
-                const slidePadding = 16;
+                const slidePadding = 24;
+                const slideTitleSpace = 40;
                 const projection = isTerritoryView
                     ? null
                     : d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
@@ -716,18 +717,20 @@ function initMap() {
                         return `territory-outline ${status}`;
                     })
                     .attr('d', slide => {
+                        const contentWidth = slide.size[0] - slidePadding * 2;
+                        const contentHeight = slide.size[1] - slidePadding * 2 - slideTitleSpace;
                         const projection = d3.geoMercator().fitSize(
-                            [slide.size[0] - slidePadding * 2, slide.size[1] - slidePadding * 2],
+                            [contentWidth, contentHeight],
                             slide.feature
                         );
                         const slidePath = d3.geoPath(projection);
                         return slidePath(slide.feature);
                     })
-                    .attr('transform', `translate(${slidePadding}, ${slidePadding})`);
+                    .attr('transform', `translate(${slidePadding}, ${slidePadding + slideTitleSpace})`);
 
                 slidesMerged.select('.territory-slide-title')
                     .attr('x', slide => slide.size[0] / 2)
-                    .attr('y', 24)
+                    .attr('y', slidePadding - 2)
                     .attr('text-anchor', 'middle')
                     .text(slide => slide.name);
 
