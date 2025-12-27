@@ -442,9 +442,21 @@ function initMap() {
                 console.warn('States without data:', missingStates.join(', '));
             }
 
+            const territoryFeatures = fallbackTerritories.map(territory => ({
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: territory.coordinates },
+                properties: { name: territory.name }
+            }));
+
             const renderMap = (viewMode = 'us') => {
                 const projection = viewMode === 'global'
-                    ? d3.geoMercator().center([-120, 28]).scale(230).translate([width / 2, height / 2])
+                    ? d3.geoMercator().fitExtent(
+                        [[20, 20], [width - 20, height - 20]],
+                        {
+                            type: 'FeatureCollection',
+                            features: [...states.features, ...territoryFeatures]
+                        }
+                    )
                     : d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
 
                 path.projection(projection);
@@ -494,7 +506,6 @@ function initMap() {
 
                 const markersEnter = markers.enter()
                     .append('circle')
-                    .attr('r', 10)
                     .attr('data-state', territory => territory.name)
                     .attr('tabindex', '0')
                     .attr('role', 'button')
@@ -513,6 +524,7 @@ function initMap() {
                     });
 
                 markersEnter.merge(markers)
+                    .attr('r', viewMode === 'global' ? 16 : 10)
                     .attr('cx', territory => {
                         const projected = projection(territory.coordinates);
                         return (projected || territory.fallback)[0];
