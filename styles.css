@@ -91,17 +91,19 @@ body {
 h1, h2 {
     font-family: 'Semyon Soviet', 'Merriweather', 'Montserrat', serif;
     letter-spacing: 0.5px;
-    white-space: nowrap;
-    display: inline-block;
+    white-space: normal;
+    display: block;
     max-width: 100%;
+    word-break: keep-all;
 }
 
 h3, h4 {
     font-family: 'Merom Sans', 'Merriweather', 'Montserrat', sans-serif;
     letter-spacing: 0.5px;
-    white-space: nowrap;
-    display: inline-block;
+    white-space: normal;
+    display: block;
     max-width: 100%;
+    word-break: keep-all;
 }
 
 li, span, button {
@@ -278,7 +280,7 @@ p {
 }
 
 .control-hint {
-    color: var(--soft-sand);
+    color: var(--text-gold);
     font-size: 0.95em;
     opacity: 0.9;
 }
@@ -483,6 +485,8 @@ p {
     margin-left: auto;
     margin-right: auto;
     box-shadow: 0 2px 8px rgba(107, 91, 77, 0.15);
+    background: url('light-yellow-background.webp') center / cover no-repeat;
+    padding: 10px;
 }
 
 .federal-item h3 {
@@ -497,11 +501,11 @@ p {
     margin-bottom: 10px;
     line-height: 1.7;
     font-size: 0.98em;
-    color: var(--text-gold);
+    color: var(--text-dark);
 }
 
 .federal-item strong {
-    color: var(--text-gold);
+    color: var(--forest-green);
     font-weight: 600;
 }
 
