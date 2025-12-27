@@ -173,7 +173,8 @@ body {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
-.view-toggle.is-global {
+.view-toggle.is-global,
+.view-toggle.is-territory {
     background: linear-gradient(135deg, var(--terracotta), var(--clay-orange));
 }
 
@@ -247,6 +248,14 @@ body {
     filter: brightness(1.1);
     stroke: var(--forest-green);
     stroke-width: 2;
+}
+
+.territory-label {
+    font-weight: 700;
+    fill: var(--earth-brown);
+    pointer-events: none;
+    font-size: 1em;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .state.fully-legal,
