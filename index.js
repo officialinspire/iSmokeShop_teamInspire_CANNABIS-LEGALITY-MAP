@@ -723,7 +723,9 @@ function initMap() {
                 slidesMerged
                     .transition(transition)
                     .style('opacity', 1)
-                    .attr('transform', slide => `translate(${slide.position[0]}, ${slide.position[1]})`);
+                    .style('transform', slide => `translate(${slide.position[0]}px, ${slide.position[1]}px)`)
+                    .style('--slide-x', slide => `${slide.position[0]}px`)
+                    .style('--slide-y', slide => `${slide.position[1]}px`);
 
                 slidesMerged.select('.territory-slide-bg')
                     .attr('width', slide => slide.size[0])
