@@ -1,0 +1,11 @@
+{
+  "type": "Topology",
+  "objects": {
+    "states": {
+      "type": "GeometryCollection",
+      "geometries": []
+    }
+  },
+  "arcs": [],
+  "transform": null
+}

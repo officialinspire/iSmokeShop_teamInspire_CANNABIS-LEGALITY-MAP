@@ -380,6 +380,45 @@ const stateData = {
     }
 };
 
+const MAP_FETCH_TIMEOUT_MS = 12000;
+
+async function fetchWithTimeout(resource, options = {}, timeout = MAP_FETCH_TIMEOUT_MS) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(resource, { ...options, signal: controller.signal });
+        return response;
+    } finally {
+        clearTimeout(id);
+    }
+}
+
+async function loadMapData() {
+    const remoteUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
+    const localUrl = 'data/states-10m.json';
+
+    try {
+        const response = await fetchWithTimeout(remoteUrl);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return await response.json();
+    } catch (remoteError) {
+        console.warn('Primary map fetch failed, attempting offline fallback.', remoteError);
+        try {
+            const response = await fetchWithTimeout(localUrl, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`Local map fetch failed with status ${response.status}`);
+            return await response.json();
+        } catch (localError) {
+            throw new Error(`Unable to load map data. Remote error: ${remoteError.message}; Local error: ${localError.message}`);
+        }
+    }
+}
+
+function renderMapError(container, message) {
+    if (!container) return;
+    container.innerHTML = `<p class="map-error">${message}</p>`;
+}
+
 // Initialize map
 function initMap() {
     const container = document.getElementById('mapContainer');
@@ -398,11 +437,7 @@ function initMap() {
     const path = d3.geoPath();
     let currentView = 'us';
 
-    fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json();
-        })
+    loadMapData()
         .then(us => {
             const states = topojson.feature(us, us.objects.states);
 
@@ -790,7 +825,7 @@ function initMap() {
         })
         .catch(error => {
             console.error('✗ Map loading error:', error);
-            container.innerHTML = '<p style="color:red;text-align:center;padding:40px;">Error loading map. Please refresh.</p>';
+            renderMapError(container, 'Error loading map. Please refresh or try importing an offline map package (.zip).');
         });
 }
 
